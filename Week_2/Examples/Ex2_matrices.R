@@ -50,6 +50,7 @@ print(result)
 # Subtract the matrices
 result <- matrix1 - matrix2
 cat("Result of subtraction","\n")
+print(result)
 ##############################################################################
 ##Multiplication and Division
 # Create two 2x3 matrices.
