@@ -20,7 +20,7 @@ Read the sales_pipe.txt file into an R data frame as sales.
 
 ```{r}
 # Your code here
-sales_df <- read.delim("Week_2/Data/sales_pipe.txt",sep="|",stringsAsFactors = FALSE,check.names = FALSE)
+sales_df <- read.delim("Data/sales_pipe.txt",sep="|",stringsAsFactors = FALSE,check.names = FALSE)
 ```
 
 # Exercise 2
@@ -51,18 +51,10 @@ order_minmax_length_days<-interval(min(sales_df$Order.Date),max(sales_df$Order.D
 order_minmax_length_years<-interval(min(sales_df$Order.Date),max(sales_df$Order.Date))/years(1) #exact number of years between most recent and oldest orders
 order_minmax_length_weeks<-interval(min(sales_df$Order.Date),max(sales_df$Order.Date))/weeks(1) #exact number of weeks between most recent and oldest orders
 
-cat("The number of days between the most recent and oldest order is",
-    order_minmax_length_days,
-    "days.\nThe number of years between the most recent and oldest order is",
-    order_minmax_length_years,
-    "years (or approximately",
-    round(order_minmax_length_years), #approximate number of years between most recent and oldest orders
-    "years).\nThe number of weeks between the most recent and oldest order is",
-    order_minmax_length_weeks,
-    "weeks (or approximately",
-    round(order_minmax_length_weeks), #approximate number of weeks between most recent and oldest orders
-    "weeks)."
-)
+approx_order_minmax_length_years<-round(order_minmax_length_years) #approximate number of years between most recent and oldest orders
+approx_order_minmax_length_weeks<-round(order_minmax_length_weeks) #approximate number of weeks between most recent and oldest orders
+
+cat("The number of days between the most recent and oldest order is", order_minmax_length_days, "days.\nThe number of years between the most recent and oldest order is", order_minmax_length_years, "years (or approximately", approx_order_minmax_length_years, "years).\nThe number of weeks between the most recent and oldest order is", order_minmax_length_weeks, "weeks (or approximately", approx_order_minmax_length_weeks, "weeks).")
 ```
 
 
