@@ -52,12 +52,18 @@ sales_csv$Product <- paste(temp_char[,1], temp_char[,2],sep='-')
 # Our product number is now just the third column of the matrix
 sales_csv$Product.Number <- temp_char[,3]
 
+#test<-sales_csv
+#test<-cbind(test,temp_char)
+
+
 cat(
   sales_csv$Product.ID[1]
   ,sales_csv$Product[1]
   ,sales_csv$Product.Number[1]
   ,sep="\n\r"
 )
+
+#sales_csv[1,"Product"] is the same thing as sales_csv$Product[1]
 
 ################################### Factors ##################################
 # Check whether Region is a factor & find the unique values. 
