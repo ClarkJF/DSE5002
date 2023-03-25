@@ -1,11 +1,28 @@
 ---
 title: "Week 2 Exercises"
 author: "James Clark"
-date: "March 18, 2022"
+date: "March 2022"
 output: pdf_document
+header-includes:
+- |
+  ```{=latex}
+  \usepackage{fvextra}
+  \DefineVerbatimEnvironment{Highlighting}{Verbatim}{
+    breaklines,
+    commandchars=\\\{\}
+  }
+  \DefineVerbatimEnvironment{verbatim}{Verbatim}{
+    breaklines,
+    commandchars=\\\{\}
+  }
+  ```
 ---
 
-Please complete all exercises below. You may use stringr, lubridate, or the forcats library. 
+```{r,include=FALSE}
+knitr::opts_chunk$set(tidy.opts = list(width.cutoff = 60), tidy = TRUE)
+```
+
+Please complete all exercises below. You may use stringr, lubridate, or the forcats library.
 
 Place this at the top of your script:
 
@@ -16,7 +33,8 @@ library(forcats)
 ```
 
 # Exercise 1
-Read the sales_pipe.txt file into an R data frame as sales. 
+
+Read the sales_pipe.txt file into an R data frame as sales.
 
 ```{r}
 # Your code here
@@ -24,7 +42,8 @@ sales_df <- read.delim("Data/sales_pipe.txt",sep="|",stringsAsFactors = FALSE,ch
 ```
 
 # Exercise 2
-You can extract a vector of columns names from a data frame using the colnames() function. Notice the first column has some odd characters. Change the column name for the FIRST column in the sales date frame to Row.ID. 
+
+You can extract a vector of columns names from a data frame using the colnames() function. Notice the first column has some odd characters. Change the column name for the FIRST column in the sales date frame to Row.ID.
 
 **Note: You will need to assign the first element of colnames to a single character.**
 
@@ -35,9 +54,8 @@ colnames(sales_df)
 ```
 
 # Exercise 3
-Convert both Order.ID and Order.Date to date vectors within the sales data frame. What is the number of days between the most recent order and the oldest order?
-How many years is that?
-How many weeks?
+
+Convert both Order.ID and Order.Date to date vectors within the sales data frame. What is the number of days between the most recent order and the oldest order? How many years is that? How many weeks?
 
 **Note: Use lubridate**
 
@@ -57,8 +75,8 @@ approx_order_minmax_length_weeks<-round(order_minmax_length_weeks) #approximate 
 cat("The number of days between the most recent and oldest order is", order_minmax_length_days, "days.\nThe number of years between the most recent and oldest order is", order_minmax_length_years, "years (or approximately", approx_order_minmax_length_years, "years).\nThe number of weeks between the most recent and oldest order is", order_minmax_length_weeks, "weeks (or approximately", approx_order_minmax_length_weeks, "weeks).")
 ```
 
-
 # Exercise 4
+
 What is the average number of days it takes to ship an order?
 
 ```{r}
@@ -70,10 +88,9 @@ mean_order_to_ship_length<-mean(interval(sales_df$Order.Date,sales_df$Ship.Date)
 cat("The average number of days it takes to ship an order is", mean_order_to_ship_length, "(or roughly", round(mean_order_to_ship_length),"days).")
 ```
 
-
 # Exercise 5
-How many customers have the first name Bill?
-You will need to split the customer name into first and last name segments and then use a regular expression to match the first name bill. Use the length() function to determine the number of customers with the first name Bill in the sales data. 
+
+How many customers have the first name Bill? You will need to split the customer name into first and last name segments and then use a regular expression to match the first name bill. Use the length() function to determine the number of customers with the first name Bill in the sales data.
 
 ```{r}
 # Your code here
@@ -85,8 +102,8 @@ length(unique(sales_df$Customer.Name[sales_df$Customer.First.Name=="Bill"]))
 ```
 
 # Exercise 6
-How many mentions of the word 'table' are there in the Product.Name column? 
-**Note you can do this in one line of code**
+
+How many mentions of the word 'table' are there in the Product.Name column? **Note you can do this in one line of code**
 
 ```{r}
 # Your code here
@@ -94,7 +111,8 @@ sum(str_count(sales_df$Product.Name,"table"))
 ```
 
 # Exercise 7
-Create a table of counts for each state in the sales data. The counts table should be ordered alphabetically from A to Z. 
+
+Create a table of counts for each state in the sales data. The counts table should be ordered alphabetically from A to Z.
 
 ```{r}
 # Your code here
@@ -102,7 +120,8 @@ table(sales_df$State)
 ```
 
 # Exercise 8
-Create an alphabetically ordered barplot for each sales Category in the State of Texas. 
+
+Create an alphabetically ordered barplot for each sales Category in the State of Texas.
 
 ```{r}
 # Your code here
@@ -110,8 +129,8 @@ barplot(table(sales_df$Category[sales_df$State=='Texas']))
 ```
 
 # Exercise 9
-Find the average profit by region.
-**Note: You will need to use the aggregate() function to do this. To understand how the function works type ?aggregate in the console.**
+
+Find the average profit by region. **Note: You will need to use the aggregate() function to do this. To understand how the function works type ?aggregate in the console.**
 
 ```{r}
 # Your code here
@@ -119,11 +138,10 @@ aggregate(sales_df$Profit,list(sales_df$Region),mean)
 ```
 
 # Exercise 10
-Find the average profit by order year. 
-**Note: You will need to use the aggregate() function to do this. To understand how the function works type ?aggregate in the console.**
+
+Find the average profit by order year. **Note: You will need to use the aggregate() function to do this. To understand how the function works type ?aggregate in the console.**
 
 ```{r}
 # Your code here
 aggregate(sales_df$Profit,list(year(sales_df$Order.Date)),mean)
 ```
-
