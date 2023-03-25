@@ -1,0 +1,241 @@
+---
+title: "Week 3 Exercises"
+author: "James Clark"
+date: "March 2023"
+output: pdf_document
+header-includes:
+- |
+  ```{=latex}
+  \usepackage{fvextra}
+  \DefineVerbatimEnvironment{Highlighting}{Verbatim}{
+    breaklines,
+    commandchars=\\\{\}
+  }
+  \DefineVerbatimEnvironment{verbatim}{Verbatim}{
+    breaklines,
+    commandchars=\\\{\}
+  }
+  ```
+---
+
+```{r,include=FALSE}
+knitr::opts_chunk$set(tidy.opts = list(width.cutoff = 60), tidy = TRUE)
+```
+
+Please complete all exercises below. You may use any library that we have covered in class UP TO THIS POINT.
+
+```{r}
+library(hash)
+```
+
+1)  Two Sum - Write a function named two_sum()
+
+Given a vector of integers nums and an integer target, return indices of the two numbers such that they add up to target.
+
+You may assume that each input would have exactly one solution, and you may not use the same element twice.
+
+You can return the answer in any order.
+
+Example 1:
+
+Input: nums = [2,7,11,15], target = 9 Output: [0,1] Explanation: Because nums[0] + nums[1] == 9, we return [0, 1]. Example 2:
+
+Input: nums = [3,2,4], target = 6 Output: [1,2] Example 3:
+
+Input: nums = [3,3], target = 6 Output: [0,1]
+
+Constraints:
+
+2 \<= nums.length \<= 104 --109 \<= nums[i] \<= 109 --109 \<= target \<= 109 Only one valid answer exists.
+
+*Note: For the first problem I want you to use a brute force approach (loop inside a loop)*
+
+*The brute force approach is simple. Loop through each element x and find if there is another value that equals to target -- x*
+
+*Use the function seq_along to iterate*
+
+```{r}
+two_sum <- function(nums_vector,target){
+  #counter<-0 #initialize counter to count number of iterations
+  
+  if(is.numeric(nums_vector)){ #error handling to make sure vector is numeric, if one value in vector is not numeric, the vector will default to everything being that non-numeric type.
+    for(i in seq_along(nums_vector)){
+      second_value <- target-nums_vector[i]
+      for(j in seq_along(nums_vector)){
+        #counter<-counter+1 #add 1 to counter
+        if(nums_vector[i]!=nums_vector[j] & nums_vector[j]==second_value){
+          print(c(i,j))
+         break    #assume that each input would have exactly one solution 
+        }
+      }
+    }
+    #cat("The number of iterations is ", counter,".\n",sep="")
+  }else{
+    stop("ERROR: One or more of your values in the vector is not numeric")
+  }
+  
+}
+
+
+# Test code
+nums_vector <- c(5,7,12,34,6,10,8,9)
+target <- 13
+ 
+two_sum(nums_vector,target)
+#expected answers
+#[1] 1 7
+#[1] 2 5
+#[1] 5 2
+
+```
+
+```{r,include=FALSE}
+two_sum_alt <- function(nums_vector,target){
+  #Since addition is commutative nums_vector[i]+nums_vector[j]==nums_vector[j]+nums_vector[i], we can reduce calculations by just finding only c(i,j) solution instead of both c(i,j) and c(j,i)
+  
+  counter<-0 #initialize counter to count number of iterations
+  if(is.numeric(nums_vector)){ #error handling to make sure vector is numeric
+    for(i in seq_along(nums_vector[-c(length(nums_vector))])){ #sequence along vector except for last value, since you cant use same element twice
+      second_value <- target-nums_vector[i]
+      for(j in (i+1):length(nums_vector)){
+        counter<-counter+1 #add 1 to counter
+        if(nums_vector[j]==second_value){
+          print(c(i,j))
+         break    #assume that each input would have exactly one solution 
+        }
+      }
+    }
+    cat("The number of iterations is ", counter,".\n\n",sep="")
+  }else{
+    stop("ERROR: One or more of your values in the vector is not numeric")
+  }
+  
+}
+two_sum_alt(nums_vector,target)
+
+two_sum_alt2 <- function(nums_vector,target){
+  #alternate way to find solution using one loop and vectorization
+  
+  counter<-0 #initialize counter to count number of iterations
+  if(is.numeric(nums_vector)){ #error handling to make sure vector is numeric
+    for(i in seq_along(nums_vector)){
+      counter<-counter+1 #add 1 to counter
+      if(length(which(target-nums_vector[i]==nums_vector))>0){ #vectorized version of checking if there are any solutions
+        print(c(i,which(target-nums_vector[i]==nums_vector)))  
+      }
+    }
+    cat("The number of iterations is ", counter,".\n\n",sep="")
+  }else{
+    stop("ERROR: One or more of your values in the vector is not numeric")
+  }
+}
+
+two_sum_alt2(nums_vector,target)
+
+two_sum_alt3 <- function(nums_vector,target){
+  #Second alternate way to find solution using one loop and vectorization and reducing calculations by finding only c(i,j) solution instead of both c(i,j) and c(j,i)
+  
+  temp_vector<-nums_vector #place holder vector to be used for while loop
+  counter<-0 #initialize counter to count number of iterations
+  if(is.numeric(nums_vector)){ #error handling to make sure vector is numeric
+    while(length(temp_vector)>1){ #keep removing values checked and values that are part of solutions until only one is left. Since we need two values to sum, the last value in temp_vector does not need to be checked.
+      counter<-counter+1 #add 1 to counter
+      if(length(which(target-temp_vector[1]==nums_vector))>0){ #check if first entry in temp_vector is part of a solution
+        print(c(which(nums_vector==temp_vector[1]),which(target-temp_vector[1]==nums_vector))) #if first entry of temp_vector is part of a solution, print ordered pair c(i,j)
+        temp_vector<-temp_vector[-c(which(target-temp_vector[1]==temp_vector))]
+        #after solution c(i,j) is found, this will remove checking for c(j,i) since we are assuming that each input would have exactly one solution
+      }
+      temp_vector<-temp_vector[-c(1)] #remove first entry of temp_vector after we finish checking if it is a solution
+    }
+    cat("The number of iterations is ", counter,".\n\n",sep="")
+  }else{
+    stop("ERROR: One or more of your values in the vector is not numeric")
+  }
+}
+
+two_sum_alt3(nums_vector,target)
+
+```
+
+2)  Now write the same function using hash tables. Loop the array once to make a hash map of the value to its index. Then loop again to find if the value of target-current value is in the map.
+
+*The keys of your hash table should be each of the numbers in the nums_vector minus the target.*
+
+*A simple implementation uses two iterations. In the first iteration, we add each element's value as a key and its index as a value to the hash table. Then, in the second iteration, we check if each element's complement (target -- nums_vector[i]) exists in the hash table. If it does exist, we return current element's index and its complement's index. Beware that the complement must not be nums_vector[i] itself!*
+
+```{r}
+
+two_sum_hash <- function(nums_vector,target){
+  if(is.numeric(nums_vector)){ #error handling to make sure vector is numeric
+    h<-hash()
+    #counter<-0 #initialize counter to count number of iterations
+    
+    for(i in seq_along(nums_vector)){
+      #counter<-counter+1 #add 1 to counter
+      h[nums_vector[i]]<-i
+    } #build hash dictionary
+    
+    for(j in seq_along(nums_vector)){
+      #counter<-counter+1 #add 1 to counter
+      if(!is.null(h[[as.character(target-nums_vector[j])]])){ #checks to see if value we are looking for is in key of hash
+        print(c(j,h[[as.character(target-nums_vector[j])]])) #print index j and index for value target-nums_vector[j], which are solutions
+      }
+    }
+    #cat("The number of iterations is ", counter,".\n\n",sep="")
+  }else{
+    stop("ERROR: One or more of your values in the vector is not numeric")
+  }
+  
+}
+
+
+# Test code
+nums_vector <- c(5,7,12,34,6,10,8,9)
+target <- 15
+
+#target<-13 #Used to compare to solutions in previous Problem #1
+ 
+two_sum_hash(nums_vector,target)
+#expected answers
+#[1] 10  5
+#[1] 8 7
+#[1] 9 6
+#[1]  5 10
+#[1] 7 8
+#[1] 6 9
+
+
+
+```
+
+```{r, include=FALSE}
+two_sum_hash_2 <- function(nums_vector,target){
+  #Since addition is commutative nums_vector[i]+nums_vector[j]==nums_vector[j]+nums_vector[i], we can reduce calculations by just finding c(i,j) solution instead of both c(i,j) and c(j,i)
+  
+  if(is.numeric(nums_vector)){ #error handling to make sure vector is numeric
+    h<-hash()
+    counter<-0 #initialize counter to count number of iterations
+    
+    for(i in seq_along(nums_vector)){
+      counter<-counter+1 #add 1 to counter
+      h[nums_vector[i]]<-i
+    } #build hash dictionary
+    
+    temp_vector<-nums_vector #place holder vector to be used for while loop
+    
+    while(length(temp_vector)>1){#keep removing values checked and values that are part of solutions until only one is left. Since we need two values to sum, the last value in temp_vector does not need to be checked.
+      counter<-counter+1 #add 1 to counter
+      if(!is.null(h[[as.character(target-temp_vector[1])]])){#checks to see if value we are looking for is in key of hash
+        print(c(which(temp_vector[1]==nums_vector),h[[as.character(target-temp_vector[1])]])) #print index j and index for value target-nums_vector[j], which are solutions
+        temp_vector<-temp_vector[-c(which(target-temp_vector[1]==temp_vector))] #after solution c(i,j) is found, this will remove checking for c(j,i) since we are assuming that each input would have exactly one solution
+      }
+      temp_vector<-temp_vector[-c(1)] #remove first entry of temp_vector after we finish checking if it is a solution
+    }
+    cat("The number of iterations is ", counter,".\n\n",sep="")
+  }else{
+    stop("ERROR: One or more of your values in the vector is not numeric")
+  }
+}
+
+two_sum_hash_2(nums_vector,target)
+```
