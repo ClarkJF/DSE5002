@@ -86,6 +86,11 @@ sales_df$Ship.Date<-mdy(sales_df$Ship.Date)
 mean_order_to_ship_length<-mean(interval(sales_df$Order.Date,sales_df$Ship.Date)/days(1))
 
 cat("The average number of days it takes to ship an order is", mean_order_to_ship_length, "(or roughly", round(mean_order_to_ship_length),"days).")
+
+#Instructor Solution
+#x<-max(sales_df$Order.Date)-min(sales$Order.Date)
+#year<-days(x)/years(1)
+#week<-days(x)/weeks(1)
 ```
 
 # Exercise 5
@@ -99,6 +104,11 @@ sales_df$Customer.First.Name<-temp_char[,1]
 sales_df$Customer.Last.Name<-temp_char[,2]
 
 length(unique(sales_df$Customer.Name[sales_df$Customer.First.Name=="Bill"]))
+
+#Instructor Solution
+#Customer.Name<-sales_df[,7]
+#sales_df$FN<-sapply(strsplit(Customer.Name," "),'[',1)
+#length(grep("Bill",sales_df$FN))
 ```
 
 # Exercise 6
@@ -108,6 +118,9 @@ How many mentions of the word 'table' are there in the Product.Name column? **No
 ```{r}
 # Your code here
 sum(str_count(sales_df$Product.Name,"table"))
+
+#Instructor Solution
+#length(grep('table',sales_df$Product.Name))
 ```
 
 # Exercise 7
@@ -117,6 +130,9 @@ Create a table of counts for each state in the sales data. The counts table shou
 ```{r}
 # Your code here
 table(sales_df$State)
+
+#Instructor Solution
+#as.data.frame(table(sales_df$State))
 ```
 
 # Exercise 8
@@ -126,6 +142,10 @@ Create an alphabetically ordered barplot for each sales Category in the State of
 ```{r}
 # Your code here
 barplot(table(sales_df$Category[sales_df$State=='Texas']))
+
+#Instructor Solution
+#texas<-sales_df[sales_df$State=='Texas',]
+#barplot(table(factor(sales_df$Category)))
 ```
 
 # Exercise 9
@@ -135,6 +155,9 @@ Find the average profit by region. **Note: You will need to use the aggregate() 
 ```{r}
 # Your code here
 aggregate(sales_df$Profit,list(sales_df$Region),mean)
+
+#Instructor Solution
+#aggregate(sales_df$Profiit ~ sales_df$Region, sales_df, mean)
 ```
 
 # Exercise 10
@@ -144,4 +167,8 @@ Find the average profit by order year. **Note: You will need to use the aggregat
 ```{r}
 # Your code here
 aggregate(sales_df$Profit,list(year(sales_df$Order.Date)),mean)
+
+#Instructor Solution
+#year<- format(sales_df$Order.Date, format-"%Y")
+#aggretage(sales_df$Profit ~ year, sales_df, mean)
 ```
